@@ -45,6 +45,11 @@
             border: 1px solid rgba(255, 255, 255, 0.18);
             transform-style: preserve-3d;
             transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: fadeIn 1s ease-in;
+            opacity: 1;
+            display: block !important; /* Prevent disappearing */
+            min-width: 300px; /* Added minimum width */
+            min-height: 200px; /* Added minimum height */
         }
         .container:hover {
             transform: translateZ(20px) rotateX(5deg) rotateY(5deg);
@@ -105,28 +110,20 @@
             pointer-events: none;
             z-index: -1;
         }
-        .valentine-card {
+        .valentine-message {
             background: rgba(255, 255, 255, 0.95);
-            padding: 40px;
+            padding: 30px;
             border-radius: 20px;
             box-shadow: 0 15px 35px rgba(255, 105, 180, 0.4);
-            max-width: 500px;
             border: 3px solid #ff69b4;
-            position: relative;
-            backdrop-filter: blur(10px);
-            animation: float 3s ease-in-out infinite;
-        }
-        .valentine-card::before {
-            content: '';
-            position: absolute;
-            top: -15px;
-            left: -15px;
-            right: -15px;
-            bottom: -15px;
-            border: 2px dashed #ff69b4;
-            border-radius: 25px;
-            z-index: -1;
-            animation: rotate 20s linear infinite;
+            max-width: 500px;
+            text-align: center;
+            animation: fadeInUp 1s ease-out;
+            opacity: 1;
+            transition: opacity 0.5s ease;
+            display: block !important; /* Prevent disappearing */
+            position: relative; /* Added position relative */
+            z-index: 10; /* Added higher z-index */
         }
         .love-note {
             font-family: 'Dancing Script', cursive;
@@ -134,7 +131,6 @@
             line-height: 1.8;
             margin: 30px 0;
             font-size: 1.2em;
-            animation: fadeInUp 1s ease-out;
         }
         @keyframes rotate {
             from { transform: rotate(0deg); }
@@ -166,6 +162,10 @@
                 opacity: 1;
                 transform: translateY(0);
             }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
         .sparkle {
             position: absolute;
@@ -233,6 +233,7 @@
         const yesBtn = document.getElementById('yesBtn');
         const container = document.querySelector('.container');
         let questionIndex = 0;
+        let personName = '';
         
         const questions = [
             "Will you be my Valentine? ❤️",
@@ -243,6 +244,21 @@
             "Please reconsider! 🌹",
             "Final question: Be my Valentine? 💝"
         ];
+
+        window.onload = async () => {
+            const { value: name } = await Swal.fire({
+                title: 'Enter your name',
+                input: 'text',
+                inputPlaceholder: 'Your name',
+                allowOutsideClick: false,
+                inputValidator: (value) => {
+                    if (!value) {
+                        return 'Please enter your name!'
+                    }
+                }
+            });
+            personName = name;
+        };
 
         function createHeart() {
             const heart = document.createElement('div');
@@ -311,10 +327,19 @@
                     popup: 'animate__animated animate__heartBeat'
                 }
             }).then(() => {
-                container.innerHTML = `
-                    <div class="valentine-card animate__animated animate__flipInY">
-                        <h1 class="animate__animated animate__bounceIn">My Dearest Valentine ❤️</h1>
-                        <div class="love-note animate__animated animate__fadeIn animate__delay-1s">
+                // Create a new container for the valentine message
+                const valentineContainer = document.createElement('div');
+                valentineContainer.className = 'container valentine-message';
+                valentineContainer.style.position = 'fixed'; // Make it fixed position
+                valentineContainer.style.top = '50%'; // Center vertically
+                valentineContainer.style.left = '50%'; // Center horizontally
+                valentineContainer.style.transform = 'translate(-50%, -50%)'; // Perfect centering
+                valentineContainer.style.zIndex = '1000'; // Ensure it's above everything
+                valentineContainer.innerHTML = `
+                    <div class="animate__animated animate__fadeInUp">
+                        <h1>Dear ${personName} 💋</h1>
+                        <h2>My Dearest Valentine ❤️</h2>
+                        <div class="love-note">
                             <p>🌹 To the one who makes my heart skip a beat,</p>
                             <p>Your smile brightens my darkest days,<br>
                             Your love fills my heart in countless ways.<br>
@@ -328,13 +353,26 @@
                         </div>
                     </div>
                 `;
+
+                // Remove the old container and add the new one
+                container.remove();
+                document.body.appendChild(valentineContainer);
+
+                // Start the heart animation
                 setInterval(createHeart, 100);
-                gsap.from('.valentine-card', {
+                
+                // Add entrance animation
+                gsap.from(valentineContainer, {
                     duration: 1,
                     scale: 0,
-                    rotation: 720,
+                    rotation: 360,
                     opacity: 0,
-                    ease: "back.out(1.7)"
+                    ease: "back.out(1.7)",
+                    onComplete: () => {
+                        // Ensure the message stays visible
+                        valentineContainer.style.opacity = '1';
+                        valentineContainer.style.transform = 'translate(-50%, -50%)';
+                    }
                 });
             });
         });
