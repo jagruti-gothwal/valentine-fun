@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valentine's Proposal</title>
+    <!-- Animation & UI Libraries -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #ff69b4 0%, #ff1493 100%);
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden;
+            perspective: 1000px;
+        }
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+        .container {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 40px;
+            border-radius: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            transform-style: preserve-3d;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .container:hover {
+            transform: translateZ(20px) rotateX(5deg) rotateY(5deg);
+            box-shadow: 0 15px 35px rgba(31, 38, 135, 0.5);
+        }
+        .buttons {
+            margin-top: 30px;
+            position: relative;
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+        button {
+            padding: 15px 35px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        #yesBtn {
+            background: linear-gradient(45deg, #ff6b6b, #ff4f4f);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+            animation: pulse 1.5s infinite;
+        }
+        #noBtn {
+            background: linear-gradient(45deg, #4a4a4a, #333);
+            color: white;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        #yesBtn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.6);
+            animation: none;
+        }
+        #noBtn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+        h1 {
+            color: #ff4f4f;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            animation: heartBeat 1.5s infinite;
+        }
+        .hearts {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        .valentine-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(255, 105, 180, 0.4);
+            max-width: 500px;
+            border: 3px solid #ff69b4;
+            position: relative;
+            backdrop-filter: blur(10px);
+            animation: float 3s ease-in-out infinite;
+        }
+        .valentine-card::before {
+            content: '';
+            position: absolute;
+            top: -15px;
+            left: -15px;
+            right: -15px;
+            bottom: -15px;
+            border: 2px dashed #ff69b4;
+            border-radius: 25px;
+            z-index: -1;
+            animation: rotate 20s linear infinite;
+        }
+        .love-note {
+            font-family: 'Dancing Script', cursive;
+            color: #ff4f4f;
+            line-height: 1.8;
+            margin: 30px 0;
+            font-size: 1.2em;
+            animation: fadeInUp 1s ease-out;
+        }
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        @keyframes heartBeat {
+            0% { transform: scale(1); }
+            14% { transform: scale(1.1); }
+            28% { transform: scale(1); }
+            42% { transform: scale(1.1); }
+            70% { transform: scale(1); }
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .sparkle {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, #fff 20%, transparent 70%);
+            animation: sparkle 1.5s infinite;
+        }
+        @keyframes sparkle {
+            0% { transform: scale(0) rotate(0deg); opacity: 0; }
+            50% { transform: scale(1) rotate(180deg); opacity: 1; }
+            100% { transform: scale(0) rotate(360deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div id="particles-js"></div>
+    <div class="hearts" id="hearts"></div>
+    <div class="container animate__animated animate__bounceIn">
+        <h1 class="animate__animated animate__heartBeat animate__infinite">Will you be my Valentine? ❤️</h1>
+        <div class="buttons">
+            <button id="yesBtn" class="animate__animated animate__pulse animate__infinite">Yes</button>
+            <button id="noBtn">No</button>
+        </div>
+    </div>
+
+    <script>
+        AOS.init();
+        particlesJS.load('particles-js', {
+            "particles": {
+                "number": {
+                    "value": 80,
+                    "density": {
+                        "enable": true,
+                        "value_area": 800
+                    }
+                },
+                "color": {
+                    "value": "#ffffff"
+                },
+                "shape": {
+                    "type": "heart"
+                },
+                "opacity": {
+                    "value": 0.5,
+                    "random": true
+                },
+                "size": {
+                    "value": 5,
+                    "random": true
+                },
+                "move": {
+                    "enable": true,
+                    "speed": 3,
+                    "direction": "none",
+                    "random": true,
+                    "straight": false,
+                    "out_mode": "out",
+                    "bounce": false
+                }
+            }
+        });
+
+        const noBtn = document.getElementById('noBtn');
+        const yesBtn = document.getElementById('yesBtn');
+        const container = document.querySelector('.container');
+        let questionIndex = 0;
+        
+        const questions = [
+            "Will you be my Valentine? ❤️",
+            "Are you absolutely sure you don't want to be my Valentine? 🥺",
+            "Think about it one more time? 💭",
+            "You're really going to say no? 💔",
+            "Give me a chance! 😊",
+            "Please reconsider! 🌹",
+            "Final question: Be my Valentine? 💝"
+        ];
+
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.innerHTML = '❤️';
+            heart.style.position = 'fixed';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.top = '100vh';
+            heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
+            gsap.to(heart, {
+                duration: Math.random() * 3 + 2,
+                y: -window.innerHeight,
+                rotation: 360,
+                opacity: 0,
+                ease: "power1.out",
+                onComplete: () => heart.remove()
+            });
+            document.getElementById('hearts').appendChild(heart);
+        }
+
+        function createSparkle() {
+            const sparkle = document.createElement('div');
+            sparkle.className = 'sparkle';
+            sparkle.style.left = Math.random() * 100 + 'vw';
+            sparkle.style.top = Math.random() * 100 + 'vh';
+            document.body.appendChild(sparkle);
+            setTimeout(() => sparkle.remove(), 1500);
+        }
+
+        setInterval(createHeart, 300);
+        setInterval(createSparkle, 500);
+
+        noBtn.addEventListener('click', () => {
+            questionIndex++;
+            if (questionIndex < questions.length) {
+                Swal.fire({
+                    title: questions[questionIndex],
+                    icon: 'question',
+                    confirmButtonText: 'Continue',
+                    showClass: {
+                        popup: 'animate__animated animate__shakeX'
+                    }
+                });
+                container.querySelector('h1').textContent = questions[questionIndex];
+            } else {
+                noBtn.addEventListener('mousemove', (e) => {
+                    const x = e.clientX;
+                    const y = e.clientY;
+                    const buttonRect = noBtn.getBoundingClientRect();
+                    gsap.to(noBtn, {
+                        duration: 0.3,
+                        x: Math.random() * (window.innerWidth - buttonRect.width),
+                        y: Math.random() * (window.innerHeight - buttonRect.height),
+                        ease: "power2.out"
+                    });
+                });
+            }
+        });
+
+        yesBtn.addEventListener('click', () => {
+            Swal.fire({
+                title: 'Yay! 💖',
+                text: 'You\'ve made me the happiest person!',
+                icon: 'success',
+                confirmButtonText: 'Continue',
+                showClass: {
+                    popup: 'animate__animated animate__heartBeat'
+                }
+            }).then(() => {
+                container.innerHTML = `
+                    <div class="valentine-card animate__animated animate__flipInY">
+                        <h1 class="animate__animated animate__bounceIn">My Dearest Valentine ❤️</h1>
+                        <div class="love-note animate__animated animate__fadeIn animate__delay-1s">
+                            <p>🌹 To the one who makes my heart skip a beat,</p>
+                            <p>Your smile brightens my darkest days,<br>
+                            Your love fills my heart in countless ways.<br>
+                            With you, every moment feels like a dream,<br>
+                            We're the perfect team, or so it would seem! 💑</p>
+                            <p>Will you be mine, today and always?<br>
+                            Forever yours, with all my love 💕</p>
+                        </div>
+                        <div class="animate__animated animate__heartBeat animate__infinite">
+                            💝 Happy Valentine's Day! 💝
+                        </div>
+                    </div>
+                `;
+                setInterval(createHeart, 100);
+                gsap.from('.valentine-card', {
+                    duration: 1,
+                    scale: 0,
+                    rotation: 720,
+                    opacity: 0,
+                    ease: "back.out(1.7)"
+                });
+            });
+        });
+
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes floatHeart {
+                from {
+                    transform: translateY(0) rotate(0deg);
+                    opacity: 1;
+                }
+                to {
+                    transform: translateY(-100vh) rotate(360deg);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
