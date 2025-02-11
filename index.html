@@ -179,6 +179,65 @@
             50% { transform: scale(1) rotate(180deg); opacity: 1; }
             100% { transform: scale(0) rotate(360deg); opacity: 0; }
         }
+        /* Custom styles for SweetAlert */
+        .swal2-popup {
+            font-family: 'Dancing Script', cursive;
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 3px solid #ff69b4;
+            padding: 2em;
+        }
+        .swal2-title {
+            color: #ff4f4f !important;
+            font-size: 2.5em !important;
+            margin-bottom: 0.5em !important;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .swal2-input {
+            border: 2px solid #ff69b4 !important;
+            border-radius: 15px !important;
+            font-size: 1.2em !important;
+            padding: 1em !important;
+            margin: 1em 0 !important;
+            text-align: center;
+            font-family: 'Poppins', sans-serif;
+        }
+        .swal2-confirm {
+            background: linear-gradient(45deg, #ff6b6b, #ff4f4f) !important;
+            border-radius: 25px !important;
+            padding: 1em 2em !important;
+            font-size: 1.1em !important;
+            font-family: 'Poppins', sans-serif;
+        }
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .swal2-popup {
+                padding: 1.5em;
+                width: 90% !important;
+                max-width: 350px;
+            }
+            .swal2-title {
+                font-size: 2em !important;
+            }
+            .swal2-input {
+                font-size: 1em !important;
+                padding: 0.8em !important;
+            }
+        }
+        @media (max-width: 480px) {
+            .swal2-popup {
+                padding: 1em;
+                width: 95% !important;
+            }
+            .swal2-title {
+                font-size: 1.8em !important;
+            }
+            .swal2-input {
+                font-size: 0.9em !important;
+                padding: 0.7em !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -247,13 +306,21 @@
 
         window.onload = async () => {
             const { value: name } = await Swal.fire({
-                title: 'Enter your name',
+                title: '💝 Tell me your name, sweetheart! 💝',
                 input: 'text',
-                inputPlaceholder: 'Your name',
+                inputPlaceholder: 'Your lovely name...',
                 allowOutsideClick: false,
+                showClass: {
+                    popup: 'animate__animated animate__fadeInDown'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__fadeOutUp'
+                },
+                background: 'rgba(255, 255, 255, 0.95)',
+                confirmButtonText: 'Continue ❤️',
                 inputValidator: (value) => {
                     if (!value) {
-                        return 'Please enter your name!'
+                        return 'Please share your name with me! 🥺'
                     }
                 }
             });
